@@ -2,6 +2,9 @@
 // Lista de tareas
 //
 
+// Esto es un cambio.
+console.log('Hola mundo!');
+
 // Formulario para añadir tareas.
 const formulario = document.getElementById('new-task-form');
 // Lista de tareas (DOM).
@@ -17,7 +20,7 @@ formulario.addEventListener('submit', (event) => {
   // Se cancela el comportamiento default del formulario.
   event.preventDefault();
 
-  // Creación del nuevo ítem en el DOM.
+  // Creación de la nueva tarea en el DOM.
 
   // Item de la lista
   const item = document.createElement('li');
@@ -34,8 +37,6 @@ formulario.addEventListener('submit', (event) => {
   item.appendChild(checkbox);
   item.appendChild(label);
   lista.appendChild(item);
-
-  // Creación del nuevo ítem en el array de tareas.
 
   // Crea un objeto que representa la nueva tarea.
   const miTarea = {
