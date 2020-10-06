@@ -10,6 +10,14 @@
 let contadorTareas = 0;
 // Lista de tareas (Array).
 let tareas = [];
+// Trata de obtener la lista de tareas de localStorage,
+// si el resultado es distinto de 'null', usa las tareas almacenadas.
+const datosLocalStorage = localStorage.getItem('tareas');
+if (datosLocalStorage) {
+  tareas = JSON.parse(datosLocalStorage);
+}
+
+console.log(tareas);
 
 // addTask(): Agrega una tarea en la lista.
 function addTask(nombreTarea, fechaTarea, completoTarea) {
@@ -27,8 +35,11 @@ function addTask(nombreTarea, fechaTarea, completoTarea) {
   // Incrementa el contador de tareas.
   contadorTareas++;
 
-  // Retorna la nueva tarea que se añadió a la lista.
-  return nuevaTarea;
+  // Agrega la tarea al DOM.
+  appendTaskDOM(nuevaTarea);
+  
+  // Guarda la lista de tareas en localStorage.
+  localStorage.setItem('tareas', JSON.stringify(tareas));
 }
 
 //
@@ -56,6 +67,11 @@ function appendTaskDOM(tarea) {
   lista.appendChild(item);
 }
 
+// Inicialización de la lista del DOM, a partir de las tareas existentes.
+for (let i = 0; i < tareas.length; i++) {
+  appendTaskDOM(tareas[i]);
+}
+
 //
 // Controlador.
 //
@@ -69,11 +85,10 @@ formulario.addEventListener('submit', (event) => {
   // Se cancela el comportamiento default del formulario.
   event.preventDefault();
 
-  // Agrega el nuevo ítem (modelo).
-  const tarea = addTask(formulario.elements[0].value, formulario.elements[1].value, false);
-  // Se despliega la nueva tarea en el DOM.
-  appendTaskDOM(tarea);
+  // Agrega el nuevo ítem al modelo.
+  addTask(formulario.elements[0].value, formulario.elements[1].value, false);
 
   // Reseteamos el form.
   formulario.elements[0].value = '';
+  formulario.elements[1].value = '';
 })
