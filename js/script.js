@@ -52,6 +52,33 @@ function addTask(nombreTarea, fechaTarea, completoTarea) {
   localStorage.setItem('tareas', JSON.stringify(tareas));
 }
 
+// taskStatus(): Actualiza el estado de una tarea.
+function taskStatus(id, complete) {
+  // Recorre la lista de tareas.
+  for (let i = 0; i < tareas.length; i++) {
+    // Cuando encuentra la tarea con el id correcto cambia su estado.
+    if (tareas[i].id === id) {
+      tareas[i].completo = complete;
+      console.log(tareas[i]);
+    }
+  }
+  // Guarda la lista de tareas en localStorage.
+  localStorage.setItem('tareas', JSON.stringify(tareas));
+}
+
+// deleteTask(): Borra una tarea.
+function deleteTask(id) {
+  // Recorre la lista de tareas.
+  for (let i = 0; i < tareas.length; i++) {
+    // Cuando encuentra la tarea con el id correcto la borra.
+    if (tareas[i].id === id) {
+      tareas.splice(i, 1);
+    }
+  }
+  // Guarda la lista de tareas en localStorage.
+  localStorage.setItem('tareas', JSON.stringify(tareas));
+}
+
 //
 // Vista.
 //
@@ -67,6 +94,7 @@ function appendTaskDOM(tarea) {
   const checkbox = document.createElement('input');
   checkbox.setAttribute('type', 'checkbox');
   checkbox.setAttribute('id', `tarea-${tarea.id}`);
+  checkbox.checked = tarea.completo;
   // Label.
   const label = document.createElement('label');
   label.setAttribute('for', `tarea-${tarea.id}`);
@@ -81,6 +109,21 @@ function appendTaskDOM(tarea) {
   item.appendChild(label);
   item.appendChild(buttonDelete);
   lista.appendChild(item);
+  // Evento para marcar tareas como completas.
+  checkbox.addEventListener('click', (event) => {
+    const complete = event.currentTarget.checked;
+    const itemId = event.currentTarget.getAttribute('id');
+    const taskId = parseInt(itemId.substring(6));
+    taskStatus(taskId, complete);
+  });
+  // Evento para borrar tareas.
+  buttonDelete.addEventListener('click', (event) => {
+    const itemId = event.currentTarget.getAttribute('id');
+    const taskId = parseInt(itemId.substring(7));
+    deleteTask(taskId);
+    // Borra la tarea en el DOM.
+    event.currentTarget.parentNode.remove();
+  });
 }
 
 // Inicialización de la lista del DOM, a partir de las tareas existentes.
