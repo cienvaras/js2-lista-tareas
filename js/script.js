@@ -31,10 +31,10 @@ if (contadorLocalStorage) {
 function addTask(nombreTarea, fechaTarea, completoTarea) {
   // Crea un objeto que representa la nueva tarea.
   const nuevaTarea = {
-    id: contadorTareas,
-    nombre: nombreTarea,
-    completo: completoTarea,
-    fecha: fechaTarea,
+    _id: contadorTareas,
+    name: nombreTarea,
+    complete: completoTarea,
+    date: fechaTarea,
   };
 
   // Agrega el objeto en el array.
@@ -47,7 +47,7 @@ function addTask(nombreTarea, fechaTarea, completoTarea) {
 
   // Agrega la tarea al DOM.
   appendTaskDOM(nuevaTarea);
-  
+
   // Guarda la lista de tareas en localStorage.
   localStorage.setItem('tareas', JSON.stringify(tareas));
 }
@@ -57,8 +57,8 @@ function taskStatus(id, complete) {
   // Recorre la lista de tareas.
   for (let i = 0; i < tareas.length; i++) {
     // Cuando encuentra la tarea con el id correcto cambia su estado.
-    if (tareas[i].id === id) {
-      tareas[i].completo = complete;
+    if (tareas[i]._id === id) {
+      tareas[i].complete = complete;
       break;
     }
   }
@@ -71,7 +71,7 @@ function deleteTask(id) {
   // Recorre la lista de tareas.
   for (let i = 0; i < tareas.length; i++) {
     // Cuando encuentra la tarea con el id correcto la borra.
-    if (tareas[i].id === id) {
+    if (tareas[i]._id === id) {
       tareas.splice(i, 1);
       break;
     }
@@ -94,16 +94,16 @@ function appendTaskDOM(tarea) {
   // Checkbox.
   const checkbox = document.createElement('input');
   checkbox.setAttribute('type', 'checkbox');
-  checkbox.setAttribute('id', `tarea-${tarea.id}`);
-  checkbox.checked = tarea.completo;
+  checkbox.setAttribute('id', `tarea-${tarea._id}`);
+  checkbox.checked = tarea.complete;
   // Label.
   const label = document.createElement('label');
-  label.setAttribute('for', `tarea-${tarea.id}`);
-  label.innerHTML = `${tarea.nombre} - ${tarea.fecha}`;
+  label.setAttribute('for', `tarea-${tarea._id}`);
+  label.innerHTML = `${tarea.name} - ${tarea.date}`;
   // Botón de borrar.
   const buttonDelete = document.createElement('button');
   buttonDelete.className = 'task-list__delete';
-  buttonDelete.setAttribute('id', `delete-${tarea.id}`);
+  buttonDelete.setAttribute('id', `delete-${tarea._id}`);
   buttonDelete.innerHTML = 'Borrar';
   // Se agregan elementos.
   item.appendChild(checkbox);
