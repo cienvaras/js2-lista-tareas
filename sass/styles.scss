@@ -10,18 +10,18 @@ body {
   background-color: #eee;
   padding: 2rem;
   font-size: 1.125rem;
-}
 
-.new-task-form input {
-  font-size: 1.125rem;
-  border: none;
-  padding: 0.5rem;
-}
+  input {
+    font-size: 1.125rem;
+    border: none;
+    padding: 0.5rem;
+  }
 
-.new-task-form input[type="submit"] {
-  padding: 0.5rem 1rem;
-  background-color: #666;
-  color: #fff;
+  input[type="submit"] {
+    padding: 0.5rem 1rem;
+    background-color: #666;
+    color: #fff;
+  }
 }
 
 .task-list {
@@ -34,6 +34,11 @@ body {
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
+
+  input[type="checkbox"]:checked + label {
+    text-decoration: line-through;
+    color: #999;
+  }
 }
 
 .task-list__delete {
@@ -51,9 +56,4 @@ body {
   background-size: 12px 15.75px;
   width: 12px;
   height: 16px;
-}
-
-.task-list__item input[type="checkbox"]:checked + label {
-  text-decoration: line-through;
-  color: #999;
 }
