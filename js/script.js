@@ -59,7 +59,7 @@ function taskStatus(id, complete) {
     // Cuando encuentra la tarea con el id correcto cambia su estado.
     if (tareas[i].id === id) {
       tareas[i].completo = complete;
-      console.log(tareas[i]);
+      break;
     }
   }
   // Guarda la lista de tareas en localStorage.
@@ -73,6 +73,7 @@ function deleteTask(id) {
     // Cuando encuentra la tarea con el id correcto la borra.
     if (tareas[i].id === id) {
       tareas.splice(i, 1);
+      break;
     }
   }
   // Guarda la lista de tareas en localStorage.
