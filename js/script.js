@@ -8,25 +8,26 @@
 // Modelo.
 //
 
-// API User ID.
+// API User ID - CAMBIARLO al User ID que tienen asignado.
 const uid = 1;
-// Contador de tareas (para asignar un id único a cada tarea).
-let contadorTareas = 0;
 // Lista de tareas (Array).
 let tareas = [];
 
-// Se lee el contador de tareas del localStorage.
-const contadorLocalStorage = localStorage.getItem('contador');
-
-if (contadorLocalStorage) {
-  contadorTareas = parseInt(contadorLocalStorage, 10);
-}
+// Se obtiene el listado inicial de tareas a partir del API.
+fetch(`https://js2-tareas-api.netlify.app/api/tareas?uid=${uid}`)
+  .then((response) => response.json())
+  .then((data) => {
+    tareas = data;
+    // Inicialización de la lista del DOM, a partir de las tareas existentes.
+    for (let i = 0; i < tareas.length; i++) {
+      appendTaskDOM(tareas[i]); // eslint-disable-line no-use-before-define
+    }
+  });
 
 // addTask(): Agrega una tarea en la lista.
 function addTask(nombreTarea, fechaTarea, completoTarea) {
   // Crea un objeto que representa la nueva tarea.
   const nuevaTarea = {
-    _id: contadorTareas,
     name: nombreTarea,
     complete: completoTarea,
     date: fechaTarea,
@@ -35,16 +36,20 @@ function addTask(nombreTarea, fechaTarea, completoTarea) {
   // Agrega el objeto en el array.
   tareas.push(nuevaTarea);
 
-  // Incrementa el contador de tareas.
-  contadorTareas += 1;
-  // Se guarda el contador de tareas en localStorage.
-  localStorage.setItem('contador', contadorTareas);
+  // Envía la nueva tarea al API.
 
-  // Agrega la tarea al DOM.
-  appendTaskDOM(nuevaTarea); // eslint-disable-line no-use-before-define
-
-  // Guarda la lista de tareas en localStorage.
-  localStorage.setItem('tareas', JSON.stringify(tareas));
+  // Opciones para el fetch.
+  const fetchOptions = {
+    method: 'POST',
+    body: JSON.stringify(nuevaTarea),
+  };
+  // Ejecuta el fetch.
+  fetch(`https://js2-tareas-api.netlify.app/api/tareas?uid=${uid}`, fetchOptions)
+    .then((response) => response.json())
+    .then((data) => {
+      // Agrega la tarea al DOM.
+      appendTaskDOM(data); // eslint-disable-line no-use-before-define
+    });
 }
 
 // taskStatus(): Actualiza el estado de una tarea.
@@ -121,16 +126,6 @@ function appendTaskDOM(tarea) {
     event.currentTarget.parentNode.remove();
   });
 }
-
-// Inicialización de la lista del DOM, a partir de las tareas existentes.
-fetch(`https://js2-tareas-api.netlify.app/api/tareas?uid=${uid}`)
-  .then((response) => response.json())
-  .then((data) => {
-    tareas = data;
-    for (let i = 0; i < tareas.length; i++) {
-      appendTaskDOM(tareas[i]);
-    }
-  });
 
 //
 // Controlador.
