@@ -57,13 +57,25 @@ function taskStatus(id, complete) {
   // Recorre la lista de tareas.
   for (let i = 0; i < tareas.length; i++) {
     // Cuando encuentra la tarea con el id correcto cambia su estado.
+    tareas[i].complete = complete;
     if (tareas[i]._id === id) {
-      tareas[i].complete = complete;
+      const tareaActualizada = {
+        name: tareas[i].name,
+        complete: complete,
+        date: tareas[i].date,
+      };
+      const fetchOptions = {
+        method: 'PUT',
+        body: JSON.stringify(tareaActualizada),
+      };
+      fetch(`https://js2-tareas-api.netlify.app/api/tareas/${id}?uid=${uid}`, fetchOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        });
       break;
     }
   }
-  // Guarda la lista de tareas en localStorage.
-  localStorage.setItem('tareas', JSON.stringify(tareas));
 }
 
 // deleteTask(): Borra una tarea.
@@ -73,11 +85,17 @@ function deleteTask(id) {
     // Cuando encuentra la tarea con el id correcto la borra.
     if (tareas[i]._id === id) {
       tareas.splice(i, 1);
+      const fetchOptions = {
+        method: 'DELETE',
+      };
+      fetch(`https://js2-tareas-api.netlify.app/api/tareas/${id}?uid=${uid}`, fetchOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        });
       break;
     }
   }
-  // Guarda la lista de tareas en localStorage.
-  localStorage.setItem('tareas', JSON.stringify(tareas));
 }
 
 //
@@ -114,13 +132,13 @@ function appendTaskDOM(tarea) {
   checkbox.addEventListener('click', (event) => {
     const complete = event.currentTarget.checked;
     const itemId = event.currentTarget.getAttribute('id');
-    const taskId = parseInt(itemId.substring(6), 10);
+    const taskId = itemId.substring(6);
     taskStatus(taskId, complete);
   });
   // Evento para borrar tareas.
   buttonDelete.addEventListener('click', (event) => {
     const itemId = event.currentTarget.getAttribute('id');
-    const taskId = parseInt(itemId.substring(7), 10);
+    const taskId = itemId.substring(7);
     deleteTask(taskId);
     // Borra la tarea en el DOM.
     event.currentTarget.parentNode.remove();
