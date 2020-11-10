@@ -2,7 +2,7 @@
 // Lista de tareas
 //
 
-/* eslint-disable no-underscore-dangle, no-plusplus */
+/* eslint-disable no-underscore-dangle, no-plusplus, prefer-destructuring */
 
 //
 // Modelo.
@@ -114,6 +114,7 @@ function appendTaskDOM(tarea) {
   checkbox.setAttribute('type', 'checkbox');
   checkbox.setAttribute('id', `tarea-${tarea._id}`);
   checkbox.checked = tarea.complete;
+  checkbox.dataset.taskId = tarea._id;
   // Label.
   const label = document.createElement('label');
   label.setAttribute('for', `tarea-${tarea._id}`);
@@ -122,6 +123,7 @@ function appendTaskDOM(tarea) {
   const buttonDelete = document.createElement('button');
   buttonDelete.className = 'task-list__delete';
   buttonDelete.setAttribute('id', `delete-${tarea._id}`);
+  buttonDelete.dataset.taskId = tarea._id;
   buttonDelete.innerHTML = 'Borrar';
   // Se agregan elementos.
   item.appendChild(checkbox);
@@ -131,14 +133,12 @@ function appendTaskDOM(tarea) {
   // Evento para marcar tareas como completas.
   checkbox.addEventListener('click', (event) => {
     const complete = event.currentTarget.checked;
-    const itemId = event.currentTarget.getAttribute('id');
-    const taskId = itemId.substring(6);
+    const taskId = event.currentTarget.dataset.taskId;
     taskStatus(taskId, complete);
   });
   // Evento para borrar tareas.
   buttonDelete.addEventListener('click', (event) => {
-    const itemId = event.currentTarget.getAttribute('id');
-    const taskId = itemId.substring(7);
+    const taskId = event.currentTarget.dataset.taskId;
     deleteTask(taskId);
     // Borra la tarea en el DOM.
     event.currentTarget.parentNode.remove();
