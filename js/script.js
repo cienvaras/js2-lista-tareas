@@ -2,57 +2,27 @@
 // Lista de tareas
 //
 
-/* eslint-disable no-underscore-dangle, no-plusplus, prefer-destructuring */
-
 //
-// Modelo.
+// Variables globales.
 //
 
-// API User ID - CAMBIARLO al User ID que tienen asignado.
+// MODELO - API User ID - CAMBIARLO al User ID que tienen asignado.
 const uid = 1;
-// Lista de tareas (Array).
+
+// MODELO - Lista de tareas (Array).
 let tareas = [];
 
-// Se obtiene el listado inicial de tareas a partir del API.
-fetch(`https://js2-tareas-api.netlify.app/api/tareas?uid=${uid}`)
-  .then((response) => response.json())
-  .then((data) => {
-    tareas = data;
-    // Inicialización de la lista del DOM, a partir de las tareas existentes.
-    for (let i = 0; i < tareas.length; i++) {
-      appendTaskDOM(tareas[i]); // eslint-disable-line no-use-before-define
-    }
-  });
+// VISTA - Lista de tareas (DOM).
+const lista = document.getElementById('task-list');
 
-// addTask(): Agrega una tarea en la lista.
-function addTask(nombreTarea, fechaTarea, completoTarea) {
-  // Crea un objeto que representa la nueva tarea.
-  const nuevaTarea = {
-    name: nombreTarea,
-    complete: completoTarea,
-    date: fechaTarea,
-  };
+// Formulario para añadir tareas.
+const formulario = document.getElementById('new-task-form');
 
-  // Agrega el objeto en el array.
-  tareas.push(nuevaTarea);
+//
+// Funciones.
+//
 
-  // Envía la nueva tarea al API.
-
-  // Opciones para el fetch.
-  const fetchOptions = {
-    method: 'POST',
-    body: JSON.stringify(nuevaTarea),
-  };
-  // Ejecuta el fetch.
-  fetch(`https://js2-tareas-api.netlify.app/api/tareas?uid=${uid}`, fetchOptions)
-    .then((response) => response.json())
-    .then((data) => {
-      // Agrega la tarea al DOM.
-      appendTaskDOM(data); // eslint-disable-line no-use-before-define
-    });
-}
-
-// taskStatus(): Actualiza el estado de una tarea.
+// MODELO - taskStatus(): Actualiza el estado de una tarea.
 function taskStatus(id, complete) {
   // Recorre la lista de tareas.
   for (let i = 0; i < tareas.length; i++) {
@@ -61,7 +31,7 @@ function taskStatus(id, complete) {
     if (tareas[i]._id === id) {
       const tareaActualizada = {
         name: tareas[i].name,
-        complete: complete,
+        complete,
         date: tareas[i].date,
       };
       const fetchOptions = {
@@ -78,7 +48,7 @@ function taskStatus(id, complete) {
   }
 }
 
-// deleteTask(): Borra una tarea.
+// MODELO - deleteTask(): Borra una tarea.
 function deleteTask(id) {
   // Recorre la lista de tareas.
   for (let i = 0; i < tareas.length; i++) {
@@ -98,13 +68,7 @@ function deleteTask(id) {
   }
 }
 
-//
-// Vista.
-//
-
-// Lista de tareas (DOM).
-const lista = document.getElementById('task-list');
-
+// VISTA - apendTaskDOM(): Agrega una nueva tarea al DOM.
 function appendTaskDOM(tarea) {
   // Item de la lista
   const item = document.createElement('li');
@@ -130,13 +94,13 @@ function appendTaskDOM(tarea) {
   item.appendChild(label);
   item.appendChild(buttonDelete);
   lista.appendChild(item);
-  // Evento para marcar tareas como completas.
+  // CONTROLADOR - Evento para marcar tareas como completas.
   checkbox.addEventListener('click', (event) => {
     const complete = event.currentTarget.checked;
     const taskId = event.currentTarget.dataset.taskId;
     taskStatus(taskId, complete);
   });
-  // Evento para borrar tareas.
+  // CONTROLADOR - Evento para borrar tareas.
   buttonDelete.addEventListener('click', (event) => {
     const taskId = event.currentTarget.dataset.taskId;
     deleteTask(taskId);
@@ -145,14 +109,42 @@ function appendTaskDOM(tarea) {
   });
 }
 
+// VISTA - refreshTasksDOM(): Refresca la lista completa de tareas en el DOM.
+// PENDIENTE...
+
+// MODELO - addTask(): Agrega una tarea en la lista.
+function addTask(nombreTarea, fechaTarea, completoTarea) {
+  // Crea un objeto que representa la nueva tarea.
+  const nuevaTarea = {
+    name: nombreTarea,
+    complete: completoTarea,
+    date: fechaTarea,
+  };
+
+  // Agrega el objeto en el array.
+  tareas.push(nuevaTarea);
+
+  // Envía la nueva tarea al API.
+
+  // Opciones para el fetch.
+  const fetchOptions = {
+    method: 'POST',
+    body: JSON.stringify(nuevaTarea),
+  };
+  // Ejecuta el fetch.
+  fetch(`https://js2-tareas-api.netlify.app/api/tareas?uid=${uid}`, fetchOptions)
+    .then((response) => response.json())
+    .then((data) => {
+      // Agrega la tarea al DOM.
+      appendTaskDOM(data);
+    });
+}
+
 //
-// Controlador.
+// Inicialización del programa.
 //
 
-// Formulario para añadir tareas.
-const formulario = document.getElementById('new-task-form');
-
-// Event handler para el evento 'submit' del formulario.
+// CONTROLADOR - Event handler para el evento 'submit' del formulario.
 // Crea una nueva tarea.
 formulario.addEventListener('submit', (event) => {
   // Se cancela el comportamiento default del formulario.
@@ -165,3 +157,14 @@ formulario.addEventListener('submit', (event) => {
   formulario.elements[0].value = '';
   formulario.elements[1].value = '';
 });
+
+// MODELO - Inicialización a partir del API.
+fetch(`https://js2-tareas-api.netlify.app/api/tareas?uid=${uid}`)
+  .then((response) => response.json())
+  .then((data) => {
+    tareas = data;
+    // VISTA - Inicialización de la lista del DOM, a partir de las tareas existentes.
+    for (let i = 0; i < tareas.length; i++) {
+      appendTaskDOM(tareas[i]);
+    }
+  });
