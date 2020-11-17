@@ -2,8 +2,6 @@
 // Lista de tareas
 //
 
-/* eslint-disable no-underscore-dangle, no-plusplus, prefer-destructuring */
-
 //
 // Variables globales.
 //
@@ -33,7 +31,7 @@ function taskStatus(id, complete) {
     if (tareas[i]._id === id) {
       const tareaActualizada = {
         name: tareas[i].name,
-        complete: complete,
+        complete,
         date: tareas[i].date,
       };
       const fetchOptions = {
